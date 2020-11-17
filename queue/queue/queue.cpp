@@ -2,6 +2,9 @@
 //
 #include <iostream>
 using std::endl;
+#include <queue>;
+using std::queue;
+using std::exception;
 
 struct MyStruct
 {
@@ -12,11 +15,13 @@ class Queue
 {
 private:
     MyStruct *head,*current;
+    int count;
 public:
     Queue()
     {
         head = NULL;
         current = NULL;
+        count = 0;
     }
     ~Queue()
     {
@@ -30,7 +35,11 @@ public:
     }
 
     void push(int data);
-    int pop();
+    void pop();
+    int front();
+    int back();
+    int size();
+    bool empty();
 };
 void Queue::push(int data)
 {
@@ -48,32 +57,64 @@ void Queue::push(int data)
         current->data = data;
         current->next = NULL;
     }
+    count++;
 }
-int Queue::pop()
+void Queue::pop()
 {
     int data = 0;
     MyStruct *temp = head;
-    if (temp == NULL)
-        return NULL;
-    else
+    if (temp != NULL)
     {
-        data = temp->data;
         head = temp->next;
         delete(temp);
+        count--;
     }
-    return data;
+}
+int Queue::front()
+{
+    if (head == NULL)
+        throw exception("the queue doesnot data");
+    else
+    {
+        return head->data;
+    } 
+}
+int Queue::back()
+{
+    if (current == NULL)
+        throw exception("the queue doesnot data");
+    else
+    {
+        return current->data;
+    }
+}
+int Queue::size()
+{
+    return count;
+}
+bool Queue::empty()
+{
+    return (count > 0) ? false : true;
 }
 int main()
 {
+    queue<int> q;
     Queue queue = Queue();
-        queue.push(3);
-        queue.push(5);
-        queue.push(7);
-        queue.push(1);
-        std::cout << queue.pop() << endl;
-        std::cout << queue.pop() << endl;
-        std::cout << queue.pop() << endl;
-        std::cout << queue.pop() << endl;
+    queue.push(3);
+    queue.push(5);
+    queue.push(7);
+    queue.push(1);
+    std::cout << "The queue size is "<< queue.size() << endl;
+    std::cout << "The queue tail is " << queue.back() << endl;
+    std::cout << queue.front() << endl;
+    queue.pop();
+    std::cout << queue.front() << endl;
+    queue.pop();
+    std::cout << queue.front() << endl;
+    queue.pop();
+    std::cout << queue.front() << endl;
+    queue.pop();
+    std::cout << "Is the queue empty ? " << std::boolalpha << queue.empty() << endl;
 }
 
 // 執行程式: Ctrl + F5 或 [偵錯] > [啟動但不偵錯] 功能表
